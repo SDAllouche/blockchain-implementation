@@ -2,9 +2,11 @@ package ma.enset.blockchain.entities;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 public class Transaction {
 
     private final String sender;
@@ -20,16 +22,6 @@ public class Transaction {
         this.recipient = recipient;
         this.amount = amount;
         this.signature = ""; // Placeholder for digital signature
-    }
-
-    @Override
-    public String toString() {
-        return "Transaction{" +
-                "sender='" + sender + '\'' +
-                ", recipient='" + recipient + '\'' +
-                ", amount=" + amount +
-                ", signature='" + signature + '\'' +
-                '}';
     }
 
 }

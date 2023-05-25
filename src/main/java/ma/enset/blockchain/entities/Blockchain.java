@@ -21,21 +21,41 @@ public class Blockchain {
         this.chain = new ArrayList<>();
         this.transactionPool = new TransactionPool();
         this.difficulty = difficulty;
-        // Create the genesis block
+
+        // Create the first block
         Block genesisBlock = createGenesisBlock();
         chain.add(genesisBlock);
     }
 
     private Block createGenesisBlock() {
-        // Create the first block in the blockchain (genesis block)
 
-        List<Transaction> transactions = new ArrayList<>(); // Empty list for genesis block
+        List<Transaction> transactions = new ArrayList<>();
 
         return new Block(0, "0", transactions, 0);
     }
 
     public Block getLatestBlock() {
         return chain.get(chain.size() - 1);
+    }
+
+    private String getDifficultyPrefix() {
+        return "0".repeat(difficulty);
+    }
+
+    public boolean isValidBlock(Block block) {
+
+        Block previousBlock = getLatestBlock();
+        if (block.getIndex() != previousBlock.getIndex() + 1) {
+            return false;
+        }
+
+        if (!block.getPreviousHash().equals(previousBlock.getCurrentHash())) {
+            return false;
+        }
+
+        String prefix = getDifficultyPrefix();
+        return block.getCurrentHash().startsWith(prefix);
+
     }
 
     public Block addBlock(Block block) {
@@ -47,24 +67,6 @@ public class Blockchain {
         throw new InvalidParameterException();
     }
 
-    public boolean isValidBlock(Block block) {
-        Block previousBlock = getLatestBlock();
-
-        // Check if the index is incrementing by 1
-        if (block.getIndex() != previousBlock.getIndex() + 1) {
-            return false;
-        }
-
-        // Check if the previous hash matches
-        if (!block.getPreviousHash().equals(previousBlock.getCurrentHash())) {
-            return false;
-        }
-
-        // Check if the block hash meets the difficulty requirement
-        String prefix = getDifficultyPrefix(difficulty);
-        return block.getCurrentHash().startsWith(prefix);
-
-    }
 
     public Block mineBlock() {
 
@@ -75,7 +77,7 @@ public class Blockchain {
 
         var calculatedHash = block.calculateHash();
 
-        while (!calculatedHash.startsWith(getDifficultyPrefix(difficulty))) {
+        while (!calculatedHash.startsWith(getDifficultyPrefix())) {
             block.incrementNonce();
             calculatedHash = block.calculateHash();
         }
@@ -85,22 +87,14 @@ public class Blockchain {
         return addBlock(block);
     }
 
-
-    private String getDifficultyPrefix(int difficulty) {
-        return "0".repeat(difficulty);
-    }
-
     public boolean validateChain() {
+
         for (int i = 1; i < chain.size(); i++) {
             Block currentBlock = chain.get(i);
             Block previousBlock = chain.get(i - 1);
-
-            // Check if the current hash of the block is valid
             if (!currentBlock.getCurrentHash().equals(currentBlock.calculateHash())) {
                 return false;
             }
-
-            // Check if the previous hash is equal to the hash of the previous block
             if (!currentBlock.getPreviousHash().equals(previousBlock.getCurrentHash())) {
                 return false;
             }

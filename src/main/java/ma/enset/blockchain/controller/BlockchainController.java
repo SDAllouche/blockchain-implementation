@@ -1,9 +1,10 @@
 package ma.enset.blockchain.controller;
 
-import com.blockchain.blockchainworkshop.entity.Block;
-import com.blockchain.blockchainworkshop.entity.Blockchain;
-import com.blockchain.blockchainworkshop.entity.Transaction;
+
 import lombok.RequiredArgsConstructor;
+import ma.enset.blockchain.entities.Block;
+import ma.enset.blockchain.entities.Blockchain;
+import ma.enset.blockchain.entities.Transaction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

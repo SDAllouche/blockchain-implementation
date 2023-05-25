@@ -37,11 +37,8 @@ public class Block {
     }
 
     public String calculateHash() {
-        // Hash calculation logic using the block's attributes and HashUtil
-        // Example implementation:
         String data = index + timestamp.toString() + previousHash + transactions.toString() + nonce;
         return HashUtil.calculateSHA256(data);
     }
-
 
 }
